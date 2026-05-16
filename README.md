@@ -1,8 +1,8 @@
-# MIT 6.S985 Multimodal AI Portfolio
+# MIT 6.S985 Multimodal AI Repo
 
-This repository is my living portfolio for MIT 6.S985 Multimodal AI.
+This repository is my repo for MIT 6.S985 Multimodal AI.
 
-It collects course assignments and my final project work. The goal is to keep the repository organized enough to support iteration during the semester and clear enough to present final results at the end.
+It collects course assignments and my final project work.
 
 ## Repository structure
 
