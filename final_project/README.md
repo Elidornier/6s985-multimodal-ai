@@ -1,63 +1,70 @@
-# Preference-Aware Why Recognition in Egocentric Cooking Videos
+# Final Project: Modeling User Preference for Personalized Video Question Answering in Egocentric Video
 
-## Research question
+Report: `Modeling_User_Preference_for_Personalized_Video_Question_Answering_in_Egocentric_Video.pdf`  
+Presentation: [Open Google Slides](https://docs.google.com/presentation/d/1q-BsYuH3nhkbrrsucLD6vgpZPfHK28GxvAfwU0jdQv0/edit?usp=sharing)
 
-How can multimodal models recognize why a person performs an action in egocentric cooking videos when the explanation depends on user preferences, goals, or constraints?
+## Summary
 
-## Motivation
+This project studies whether user preference information can improve fine-grained why-recognition in egocentric video question answering. In household cooking videos, the same visible action can have different explanations depending on a person's habits, such as cleanup style, tool choice, workflow order, measurement routine, or workspace organization.
 
-Egocentric cooking videos capture actions from the viewpoint of the person acting. In this setting, the same visible action can have different reasons depending on hidden context such as dietary preferences, taste, safety concerns, timing, or task goals. This project investigates whether preference-aware prompting and evaluation can improve why-recognition beyond surface-level action descriptions.
+We evaluate preference-conditioned prompting on the HD-EPIC fine-grained why-recognition VQA task using Qwen3-VL-4B. The core question is whether participant-specific behavioral profiles help the model answer why a person performed an action.
 
-## Method overview
+## Research Question
 
-The project studies multimodal why-recognition using video observations, natural-language preference context, and structured prompting. The core comparison is between baseline multimodal inference and variants that explicitly incorporate preference information.
+Can user-level behavioral preference profiles improve personalized video question answering for egocentric why-recognition?
 
-## Pipeline
+## Method
 
-1. Select egocentric cooking video clips and define why-recognition examples.
-2. Prepare preference contexts that may explain actions in the clips.
-3. Run baseline multimodal model inference.
-4. Run preference-aware prompting variants.
-5. Evaluate outputs against expected explanations.
-6. Analyze errors by action type, preference type, and failure mode.
+We compare several ways of constructing and injecting participant preference profiles:
 
-## Experiments
+- No-preference baseline
+- LLM-generated numbered preference ratings
+- LLM-generated paragraph summaries
+- LLM-extracted past-behavior memories
+- Semi-manual hand-labeled profiles
+- Randomized-profile controls
+- Action-conditioned gated preference prompting
+- Reasoning-output prompt variants
 
-- Baseline Qwen3-VL run.
-- Preference prompting.
-- Gated preference prompting.
-- Randomized preference control.
-- Error analysis across prompt variants.
+The gated method uses the action verb to decide whether the model should rely mostly on visual evidence, mostly on preference evidence, or a balanced combination.
 
-## Results
+## Dataset and Model
 
-Results will be collected in `results/`.
+- Dataset: HD-EPIC fine-grained why-recognition VQA
+- Evaluation size: 500 multiple-choice questions
+- Participants: 9
+- Input clip: 32-second context window, sampled at 1 FPS
+- Model: Qwen3-VL-4B
+- Metric: exact-match multiple-choice accuracy
 
-## Error analysis
+## Key Results
 
-The error analysis will track cases where the model:
+| Method | Accuracy |
+|---|---:|
+| Baseline | 55.0% |
+| LLM numbered ranking | 51.6% |
+| LLM paragraph summary | 50.4% |
+| LLM past-behavior memory | 54.2% |
+| Hand-labeled profile | 56.6% |
+| Random hand-labeled profile | 53.4% |
+| Hand-labeled profile + gate | 58.6% |
+| Random hand-labeled profile + gate | 53.4% |
 
-- Describes what happened instead of why it happened.
-- Ignores relevant preference context.
-- Overuses preference context when it is irrelevant.
-- Hallucinates motivations not supported by the clip or prompt.
-- Produces vague explanations that are hard to evaluate.
+The best result comes from hand-labeled profiles with action-conditioned gating. This improves the baseline from 55.0% to 58.6%.
 
-## Future work
+## Main Takeaway
 
-- Expand the evaluation set across more cooking tasks and preference categories.
-- Compare additional multimodal models and prompting strategies.
-- Add human evaluation for explanation quality.
-- Explore automatic metrics for why-recognition consistency.
+Preference information is useful only when it is concrete, participant-specific, and selectively applied. Naively adding LLM-generated preference profiles often hurts performance and behaves similarly to randomized-profile controls. Hand-labeled profiles help modestly, and action-conditioned gating helps further by reducing cases where preference overwhelms visual evidence.
 
-## My contributions
+## Files
 
-- Define the preference-aware why-recognition task.
-- Build and organize the project pipeline.
-- Design prompting variants and controls.
-- Run experiments and analyze model outputs.
-- Prepare the final report and supporting materials.
+- `README.md`: final project overview
+- `report/`: final project report
+- `presentation/`: final presentation slides or link
+- `code/`: evaluation, prompting, and analysis code
+- `results/`: result tables, figures, and error analysis
+- `assets/`: pipeline diagrams and qualitative examples
 
-## Reproducibility
+## Future Work
 
-Code will be organized under `code/`. Results, figures, and error analysis notes will be stored under `results/`. The final report will document dataset choices, prompts, model settings, evaluation criteria, and major findings.
+Future directions include learning preference embeddings instead of using text prompts, training a relevance gate instead of hand-designing one, using contrastive learning with true versus randomized profiles, and improving long-context profile extraction with denser video sampling and uncertainty estimates.
